@@ -1,0 +1,68 @@
+message int_field
+{
+	repeated int64 int_reap = 1;
+	optional int64 holder = 2; /* for holding denominator in mean, etc.... */
+}
+
+message string_field
+{
+	repeated string str_reap = 1;
+	repeated int32 str_count = 2; /* for union with counters. */
+}
+
+message bool_field
+{
+	repeated bool bool_reap = 1;
+}
+
+message float_field
+{
+	repeated double float_reap = 1;
+	optional double holder = 2; /* for holding denominator in mean, etc.... */
+}
+
+message match_field
+{
+	optional string match_str = 1;
+	optional string logic = 2 [default = "or"];
+	optional bool negative = 3 [default = false];
+	optional string match_file = 4;
+	optional bool exact = 5 [default = false];
+}
+
+message field
+{
+	required string name = 1;
+	optional sint32 pos = 2 [default = -1]; /* field position, allows to skip fields */
+	required string type = 3; /* field type: double, float, string, ... */
+	optional bool key = 4 [default = false]; /* whether this field is use as key or part of the key */
+	optional bool aggregated = 5; /* whether to aggregate values of this field. Obviously stored. */
+	optional string aggregation = 6; /* type of aggregation (e.g. sum, union, ...) */
+	optional string processing = 7; /* field post-processing filter (e.g. day, ...) */
+	
+	optional int_field int_fi = 8;
+	optional string_field str_fi = 9;
+	optional bool_field bool_fi = 10;
+	optional float_field real_fi = 11;
+	optional uint32 count = 12; /* aggregation counter. */
+
+	optional string preprocessing = 13; /* special pre-processing for generating more fields out of a single one */
+	optional string date_format = 14 [default = "%m/%d/%Y"]; /* special formatting, e.g. for dates */
+	optional uint32 processing_offset = 15 [default = 1]; /* offset for minutes and other discrete values */
+	optional string filter = 17;
+	optional string filter_type = 18;
+	optional string url_format = 20 [default = "%scheme://%host%port"]; /* special formatting for URLs (%scheme, %host, %port, %path, %query, %fragment) */
+	optional match_field match = 21;
+	optional string numerator = 22;
+	optional string denominator = 23;
+}
+
+message logdef
+{
+	required string format_name = 1;  /* log format name */
+	required string delims = 2; /* field delimiters */
+	repeated field fields = 3;  /* definition of log fields */
+	optional string appname = 4; /* application name for the log set. */
+	optional string quotechar = 5;
+	optional string commentchar = 6;
+}
